@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-const port = 3000;
+var port = process.env.PORT || 8080;
 var mysql = require("mysql");
 
 var connection = mysql.createConnection(
