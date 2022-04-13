@@ -11,15 +11,21 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-app.get("/", (req, res) => {
-  let sql = "CALL userCheck(sushrut@gmail.com , pasdfe, ?)";
+app.get("/checkUser", (req, res) => {
+  let sql =
+    'CALL userCheck("' + req.query["email"] + '","' + req.query["pass"] + '")';
+  console.log(req.query["pass"]);
+  console.log(sql);
+  // console.log(req.params.pass);
   connection.query(sql, true, (error, results, fields) => {
-    console.log(results);
+    console.log("Results: ");
+    var resultArray = Object.values(JSON.parse(JSON.stringify(results)))[0];
+    if (resultArray.length == 1) {
+      res.json(resultArray[0]);
+    }
     if (error) {
+      console.log("Error: ");
       return console.error(error.message);
     }
-    console.log(results[0]);
   });
-
-  res.json({ message: "ok" });
 });
