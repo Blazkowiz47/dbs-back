@@ -18,8 +18,8 @@ app.get("/", (req, res) => {
       console.log(err);
     }
     // res.json(result);
-    console.log(result);
-    console.log("-----------");
+    // console.log(result);
+    // console.log("-----------");
     console.log(result[0]);
   });
   res.json({ message: "ok" });
