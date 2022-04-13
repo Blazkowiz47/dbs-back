@@ -2,7 +2,9 @@ var express = require("express");
 var app = express();
 var port = process.env.PORT || 8080;
 var mysql = require("mysql");
-
+server.listen(process.env.PORT || 8080, () => {
+  console.log("Listening on port 8080");
+});
 var connection = mysql.createConnection(
   "mysql://bf5d2e72fc0f6e:9ff42661@eu-cdbr-west-02.cleardb.net/heroku_bf301392f212b2a?reconnect=true"
 );
