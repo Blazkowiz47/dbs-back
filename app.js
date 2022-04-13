@@ -1,13 +1,17 @@
 var express = require("express");
 var app = express();
-var port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 var mysql = require("mysql");
 
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
+var connection = mysql.createConnection(
+  "mysql://bf5d2e72fc0f6e:9ff42661@eu-cdbr-west-02.cleardb.net/heroku_bf301392f212b2a?reconnect=true"
+);
+connection.connect();
+
 app.get("/checkUser", (req, res) => {
-  var connection = mysql.createConnection(
-    "mysql://bf5d2e72fc0f6e:9ff42661@eu-cdbr-west-02.cleardb.net/heroku_bf301392f212b2a?reconnect=true"
-  );
-  connection.connect();
   let sql =
     'CALL userCheck("' + req.query["email"] + '","' + req.query["pass"] + '")';
   console.log(req.query["pass"]);
@@ -16,13 +20,14 @@ app.get("/checkUser", (req, res) => {
   connection.query(sql, true, (error, results, fields) => {
     console.log("Results: ");
     var resultArray = Object.values(JSON.parse(JSON.stringify(results)))[0];
-    if (resultArray.length == 1) {
-      res.json(resultArray[0]);
-    }
     if (error) {
       console.log("Error: ");
       return console.error(error.message);
     }
+    if (resultArray.length == 1) {
+      res.json(resultArray[0]);
+    } else {
+      res.json();
+    }
   });
-  connection.end();
 });
