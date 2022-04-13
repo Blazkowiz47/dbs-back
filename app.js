@@ -7,9 +7,6 @@ var connection = mysql.createConnection(
   "mysql://bf5d2e72fc0f6e:9ff42661@eu-cdbr-west-02.cleardb.net/heroku_bf301392f212b2a?reconnect=true"
 );
 connection.connect();
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
 
 app.get("/checkUser", (req, res) => {
   let sql =
