@@ -50,6 +50,7 @@ handleDisconnect();
 
 app.get("/checkUser", (req, res) => {
   let sql = `CALL userCheck("${req.query["email"]}", "${req.query["pass"]}")`;
+  console.log(sql);
   connection.query(sql, true, (error, results, fields) => {
     var resultArray = Object.values(JSON.parse(JSON.stringify(results)))[0];
     if (error) {
