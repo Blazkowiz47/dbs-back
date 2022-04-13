@@ -12,15 +12,14 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res) => {
-  let sql = "SELECT count(*) from information_schema.COLUMNS";
-  connection.query(sql, (err, result) => {
-    if (err) {
-      console.log(err);
+  let sql = "CALL userCheck(sushrut@gmail.com , pasdfe, ?)";
+  connection.query(sql, true, (error, results, fields) => {
+    console.log(results);
+    if (error) {
+      return console.error(error.message);
     }
-    // res.json(result);
-    // console.log(result);
-    // console.log("-----------");
-    console.log(result[0]);
+    console.log(results[0]);
   });
+
   res.json({ message: "ok" });
 });
