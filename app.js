@@ -6,10 +6,47 @@ var mysql = require("mysql");
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-var connection = mysql.createConnection(
-  "mysql://bf5d2e72fc0f6e:9ff42661@eu-cdbr-west-02.cleardb.net/heroku_bf301392f212b2a?reconnect=true"
-);
-connection.connect();
+
+var db_config = {
+  host: "eu-cdbr-west-02.cleardb.net",
+  user: "bf5d2e72fc0f6e",
+  password: "9ff42661",
+  database: "heroku_bf301392f212b2a",
+};
+
+var connection;
+
+function handleDisconnect() {
+  connection = mysql.createConnection(db_config); // Recreate the connection, since
+  // the old one cannot be reused.
+
+  connection.connect(function (err) {
+    // The server is either down
+    if (err) {
+      // or restarting (takes a while sometimes).
+      console.log("error when connecting to db:", err);
+      setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+    } // to avoid a hot loop, and to allow our node script to
+  }); // process asynchronous requests in the meantime.
+  // If you're also serving http, display a 503 error.
+  connection.on("error", function (err) {
+    console.log("db error", err);
+    if (err.code === "PROTOCOL_CONNECTION_LOST") {
+      // Connection to the MySQL server is usually
+      handleDisconnect(); // lost due to either server restart, or a
+    } else {
+      // connnection idle timeout (the wait_timeout
+      throw err; // server variable configures this)
+    }
+  });
+}
+
+handleDisconnect();
+
+// var connection = mysql.createConnection(
+//   "mysql://bf5d2e72fc0f6e:9ff42661@eu-cdbr-west-02.cleardb.net/heroku_bf301392f212b2a?reconnect=true"
+// );
+// connection.connect();
 
 app.get("/checkUser", (req, res) => {
   let sql =
